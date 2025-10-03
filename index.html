@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etheria: Builds</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Page background and typography */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a1a;
+      color: #e8e8e8;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Main container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header styles */
+    header {
+      text-align: center;
+      padding: 40px 20px;
+      background: #232323;
+      border-radius: 12px;
+      margin-bottom: 40px;
+      border: 1px solid #2a2a2a;
+    }
+
+    /* Title styles */
+    h1 {
+      font-size: 3em;
+      color: #ffffff;
+      margin-bottom: 10px;
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    /* Subtitle styles */
+    .subtitle {
+      color: #888;
+      font-size: 1.1em;
+      font-weight: 300;
+    }
+
+    /* Build section grid layout */
+    .build-section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    /* Prowess selector grid */
+    .prowess-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    /* Prowess item label */
+    .prowess-item label {
+      font-size: 0.9em;
+      font-weight: 400;
+      margin-bottom: 8px;
+      color: #999;
+      text-transform: none;
+      letter-spacing: 1px;
+    }
+
+    /* Dropdown select styles */
+    select {
+      width: 100%;
+      padding: 12px;
+      background: #1e1e1e;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      color: #e8e8e8;
+      font-size: 1em;
+      cursor: pointer;
+      transition: border-color 0.3s ease;
+    }
+
+    select:hover {
+      border-color: #555;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #555;
+    }
+
+    /* Field container for each build section */
+    .field {
+      background: #232323;
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid #2a2a2a;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+    }
+
+    .field:hover {
+      background: #282828;
+      border-color: #3a3a3a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    label {
+  display: block;
+  font-size: 1.2em;
+  font-weight: 400;
+  margin-bottom: 15px;
+  color: #c0c0c0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: left;
+    }
+
+    /* Selector containers */
+    .animus-select, .shell-select, .sets-select {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  /* Selector opener styles */
+  .animus-selector, .shell-selector, .set-selector {
+      position: relative;
+      border: 1px solid #3a3a3a;
+      padding: 15px;
+      width: 100%;
+      height: 70px;
+      cursor: pointer;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e1e1e;
+      transition: border-color 0.3s ease;
+      font-weight: 400;
+    }
+
+    .animus-selector:hover, .shell-selector:hover, .set-selector:hover {
+      border-color: #555;
+    }
+
+  /* Selector dropdown grids (for animus, shell, set) */
+    .animus-grid,
+    .shell-grid,
+    .set-grid {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 10px;
+      background: #1e1e1e;
+      padding: 0;
+      border-radius: 8px;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 0;
+      width: max-content;
+      min-width: 100%;
+      max-width: 100vw;
+      border: 1px solid #3a3a3a;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      z-index: 9999;
+      right: auto;
+    }
+
+    .animus-select.open .animus-grid,
+    .shell-select.open .shell-grid,
+    .sets-select.open .set-grid {
+      display: grid;
+    }
+
+    .animus-grid::-webkit-scrollbar, .shell-grid::-webkit-scrollbar, .set-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+    .animus-grid::-webkit-scrollbar-track, .shell-grid::-webkit-scrollbar-track, .set-grid::-webkit-scrollbar-track {
+      background: #1a1a1a;
+      border-radius: 4px;
+    }
+    .animus-grid::-webkit-scrollbar-thumb, .shell-grid::-webkit-scrollbar-thumb, .set-grid::-webkit-scrollbar-thumb {
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+    .animus-grid::-webkit-scrollbar-thumb:hover, .shell-grid::-webkit-scrollbar-thumb:hover, .set-grid::-webkit-scrollbar-thumb:hover {
+      background: #222;
+    }
+
+    .overlay {
+      display: none;
+    }
+
+  /* Selector grid options (for animus, shell, set) */
+    .animus-option,
+    .shell-option,
+    .set-option {
+      width: 110px;
+      height: 110px;
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid #3a3a3a;
+      position: relative;
+      will-change: transform;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      background: #232323;
+    }
+
+    .animus-option:hover, .shell-option:hover, .set-option:hover {
+      transform: scale(1.05);
+      border-color: #555;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 20;
+    }
+
+    .animus-selector::after, .animus-option::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 28px;
+      height: 28px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border-radius: 4px;
+      z-index: 10;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+    }
+
+    .animus-selector[data-rarity="R"], .animus-option[data-rarity="R"] {
+      background-image: linear-gradient(135deg, rgba(83, 105, 122, 1), rgba(41, 41, 41, 1));
+    }
+    .animus-selector[data-rarity="SR"], .animus-option[data-rarity="SR"] {
+      background-image: linear-gradient(135deg, rgba(107, 86, 117, 1), rgba(41, 41, 41, 1));
+    }
+    .animus-selector[data-rarity="SSR"], .animus-option[data-rarity="SSR"] {
+      background-image: linear-gradient(135deg, rgba(126, 112, 60, 1), rgba(41, 41, 41, 1));
+    }
+
+    .animus-selector[data-polarity="Reason"]::after, .animus-option[data-polarity="Reason"]::after {
+      background-image: url(Images/polarity/ele_reason.webp);
+    }
+    .animus-selector[data-polarity="Odd"]::after, .animus-option[data-polarity="Odd"]::after {
+      background-image: url(Images/polarity/ele_odd.webp);
+    }
+    .animus-selector[data-polarity="Hollow"]::after, .animus-option[data-polarity="Hollow"]::after {
+      background-image: url(Images/polarity/ele_hollow.webp);
+    }
+    .animus-selector[data-polarity="Disorder"]::after, .animus-option[data-polarity="Disorder"]::after {
+      background-image: url(Images/polarity/ele_disorder.webp);
+    }
+    .animus-selector[data-polarity="Constant"]::after, .animus-option[data-polarity="Constant"]::after {
+      background-image: url(Images/polarity/ele_constant.webp);
+    }
+
+    .animus-option img, .shell-option img, .set-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .animus-selector img, .shell-selector img {
+      max-width: 120px;
+      max-height: 120px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .shell-option {
+      background: rgba(50, 50, 70, 0.5);
+    }
+
+    /* Action buttons layout */
+    .actions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex: 1;
+      min-width: 200px;
+      padding: 16px 32px;
+      font-size: 1.1em;
+      font-weight: 400;
+      cursor: pointer;
+      border: 1px solid #3a3a3a;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: white;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    button:hover {
+      background: #333;
+      border-color: #4a4a4a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #copyBtn {
+      background: #3a3a3a;
+    }
+
+    #copyBtn:hover {
+      background: #444;
+    }
+
+    /* Removed unused textarea styles for cleaner CSS */
+
+    .preview {
+      background: #232323;
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .preview h2 {
+      color: #c0c0c0;
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      font-weight: 300;
+    }
+
+    .preview p {
+      font-size: 1.1em;
+      margin: 12px 0;
+      padding: 10px;
+      background: #1e1e1e;
+      border-radius: 6px;
+      border-left: 3px solid #4a4a4a;
+    }
+
+    .preview strong {
+      color: #d0d0d0;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #2a2a2a;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      font-weight: 400;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 2000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      border: 1px solid #3a3a3a;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Shell passives vertical layout */
+    .shellpassives-vertical {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+      
+      /* Build section grid layout */
+      .build-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 40px;
+      }
+
+      .animus-grid, .shell-grid, .set-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        padding: 20px;
+      }
+
+      .animus-option, .shell-option, .set-option {
+        width: 90px;
+        height: 90px;
+      }
+    }
+
+    /* Sets selectors vertical group */
+    .sets-selects-group {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sets-select {
+      flex: 1;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay"></div>
+  
+  <div class="container">
+    <header>
+  <h1>Etheria: Builds</h1>
+  <p class="subtitle">Create and share your builds</p>
+    </header>
+
+    <div class="build-section">
+        <div class="field">
+          <label>Animus</label>
+          <div class="animus-select">
+            <div id="animusSelector" class="animus-selector">-- Select an animus --</div>
+            <div class="animus-grid" id="animusGrid"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Prowess</label>
+          <div class="prowess-container">
+            <div class="prowess-item">
+              <label>S1</label>
+              <select id="prowessS1">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="prowess-item">
+              <label>S2</label>
+              <select id="prowessS2">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="prowess-item">
+              <label>S3</label>
+              <select id="prowessS3">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Shell</label>
+          <div class="shell-select">
+            <div id="shellSelector" class="shell-selector">-- Select a Shell --</div>
+            <div class="shell-grid" id="shellGrid"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Shell Passives</label>
+          <div class="shellpassives-vertical">
+            <div class="prowess-item">
+              <label>Passive 1</label>
+              <select id="shellPassive1"></select>
+            </div>
+            <div class="prowess-item">
+              <label>Passive 2</label>
+              <select id="shellPassive2"></select>
+            </div>
+            <div class="prowess-item">
+              <label>Passive 3</label>
+              <select id="shellPassive3"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Sets</label>
+          <div class="sets-selects-group">
+            <div class="sets-select">
+              <div id="setSelector1" class="set-selector">-- Choisir un set --</div>
+              <div class="set-grid" id="setGrid1"></div>
+            </div>
+            <div class="sets-select">
+              <div id="setSelector2" class="set-selector">-- Choisir un set --</div>
+              <div class="set-grid" id="setGrid2"></div>
+            </div>
+            <div class="sets-select">
+              <div id="setSelector3" class="set-selector">-- Choisir un set --</div>
+              <div class="set-grid" id="setGrid3"></div>
+            </div>
+          </div>
+        </div>
+          <div class="field">
+            <label>Modules</label>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <div class="prowess-item">
+                <select id="moduleSelect1"></select>
+              </div>
+              <div class="prowess-item">
+                <select id="moduleSelect2"></select>
+              </div>
+              <div class="prowess-item">
+                <select id="moduleSelect3"></select>
+              </div>
+            </div>
+          </div>
+        <div class="field">
+          <label>Recap</label>
+          <div class="preview" id="preview"></div>
+        </div>
+        <div class="actions">
+          <button id="generateCopyBtn" onclick="generateAndCopyLink()">Generate & Copy Link</button>
+        </div>
+  <!-- Link output textarea removed, buttons remain functional -->
+    </div>
+    
+  </div>
+
+  <div class="toast" id="toast">Link copied!</div>
+
+  <script>
+    const animusData = [
+      {name:"Andrew Blue",rarity:"R",polarity:"Odd",img:"Images/animus/andrew-blue_sm.webp?raw=true"},
+      {name:"Andrew Red",rarity:"R",polarity:"Reason",img:"Images/animus/andrew-red_sm.webp?raw=true"},
+      {name:"Asshu",rarity:"R",polarity:"Hollow",img:"Images/animus/asshu_sm.webp?raw=true"},
+      {name:"Batsby",rarity:"SSR",polarity:"Odd",img:"Images/animus/batsby_sm.webp?raw=true"},
+      {name:"Beyontin",rarity:"SSR",polarity:"Reason",img:"Images/animus/beyontin_sm.webp?raw=true"},
+      {name:"Borgne",rarity:"SSR",polarity:"Odd",img:"Images/animus/borgne_sm.webp?raw=true"},
+      {name:"Cachi",rarity:"R",polarity:"Reason",img:"Images/animus/cachi_sm.webp?raw=true"},
+      {name:"Cachi The Guard",rarity:"SR",polarity:"Disorder",img:"Images/animus/cachi-guard_sm.webp?raw=true"},
+      {name:"Celince",rarity:"SSR",polarity:"Hollow",img:"Images/animus/Celince_sm.webp?raw=true"},
+      {name:"Chiaki The Echo",rarity:"SR",polarity:"Hollow",img:"Images/animus/chiaki_echo_sm.webp?raw=true"},
+      {name:"Chiaki",rarity:"SR",polarity:"Reason",img:"Images/animus/chiaki_sm.webp?raw=true"},
+      {name:"Dinah",rarity:"SR",polarity:"Reason",img:"Images/animus/dinah_sm.webp?raw=true"},
+      {name:"Diting",rarity:"SR",polarity:"Disorder",img:"Images/animus/diting_sm.webp?raw=true"},
+      {name:"DokiDoki",rarity:"SSR",polarity:"Constant",img:"Images/animus/dokidoki_sm.webp?raw=true"},
+      {name:"Dorothy",rarity:"SR",polarity:"Constant",img:"Images/animus/dorothy_sm.webp?raw=true"},
+      {name:"Dorothy The Wisher",rarity:"SR",polarity:"Reason",img:"Images/animus/dorothy-wisher_sm.webp?raw=true"},
+      {name:"Fangus",rarity:"SR",polarity:"Reason",img:"Images/animus/fangus_sm.webp?raw=true"},
+      {name:"Freya",rarity:"SSR",polarity:"Hollow",img:"Images/animus/freya_sm.webp?raw=true"},
+      {name:"Fuqiu",rarity:"SSR",polarity:"Hollow",img:"Images/animus/fuqiu_sm.webp?raw=true"},
+      {name:"Gray",rarity:"SR",polarity:"Hollow",img:"Images/animus/gray_sm.webp?raw=true"},
+      {name:"Heinrich",rarity:"SSR",polarity:"Disorder",img:"Images/animus/Heinrich_sm.webp?raw=true"},
+      {name:"Helkid",rarity:"SSR",polarity:"Reason",img:"Images/animus/Helkid_sm.webp?raw=true"},
+      {name:"Hizuki Mari",rarity:"SR",polarity:"Disorder",img:"Images/animus/hizuki_sm.webp?raw=true"},
+      {name:"Holden",rarity:"SSR",polarity:"Reason",img:"Images/animus/holden_sm.webp?raw=true"},
+      {name:"Hoyan",rarity:"SSR",polarity:"Hollow",img:"Images/animus/Hoyan_sm.webp?raw=true"},
+      {name:"Kazami Kazuyo",rarity:"SR",polarity:"Reason",img:"Images/animus/Kazami_sm.webp?raw=true"},
+      {name:"Kazuyo The Reverie",rarity:"SR",polarity:"Hollow",img:"Images/animus/kazuyo_sm.webp?raw=true"},
+      {name:"Khloros",rarity:"SSR",polarity:"Reason",img:"Images/animus/Khloros_sm.webp?raw=true"},
+      {name:"Kloss",rarity:"SSR",polarity:"Hollow",img:"Images/animus/Kloss_sm.webp?raw=true"},
+      {name:"Kokardi",rarity:"SSR",polarity:"Reason",img:"Images/animus/koka_sm.webp?raw=true"},
+      {name:"Kraken",rarity:"SR",polarity:"Odd",img:"Images/animus/kraken_sm.webp?raw=true"},
+      {name:"Lian",rarity:"SSR",polarity:"Reason",img:"Images/animus/Lian_sm.webp?raw=true"},
+      {name:"Liliam",rarity:"SSR",polarity:"Disorder",img:"Images/animus/liliam_sm.webp?raw=true"},
+      {name:"Lilith",rarity:"SSR",polarity:"Hollow",img:"Images/animus/Lilith_sm.webp?raw=true"},
+      {name:"Lily",rarity:"SSR",polarity:"Disorder",img:"Images/animus/lily_icon.webp?raw=true"},
+      {name:"Lingluo",rarity:"SSR",polarity:"Odd",img:"Images/animus/Lingluo_sm.webp?raw=true"},
+      {name:"Marvell",rarity:"SR",polarity:"Constant",img:"Images/animus/marvell_sm.webp?raw=true"},
+      {name:"Massiah",rarity:"SSR",polarity:"Constant",img:"Images/animus/Massiah_sm.webp?raw=true"},
+      {name:"Mia",rarity:"SSR",polarity:"Reason",img:"Images/animus/mia_sm.webp?raw=true"},
+      {name:"Mio",rarity:"SSR",polarity:"Constant",img:"Images/animus/mio_sm.webp?raw=true"},
+      {name:"Mizusumi Aya",rarity:"SSR",polarity:"Hollow",img:"Images/animus/mizu_sm.webp?raw=true"},
+      {name:"Mizuki Makoto",rarity:"SR",polarity:"Hollow",img:"Images/animus/mizuki_sm.webp?raw=true"},
+      {name:"Nahor",rarity:"SSR",polarity:"Odd",img:"Images/animus/nahor_sm.webp?raw=true"},
+      {name:"Nell",rarity:"SR",polarity:"Disorder",img:"Images/animus/Nell_sm.webp?raw=true"},
+      {name:"Ninfoniel",rarity:"SSR",polarity:"Odd",img:"Images/animus/Ninfoniel_sm.webp?raw=true"},
+      {name:"No. 41",rarity:"R",polarity:"Constant",img:"Images/animus/no41_sm.webp?raw=true"},
+      {name:"Obol",rarity:"SR",polarity:"Odd",img:"Images/animus/obol_sm.webp?raw=true"},
+      {name:"Oboro",rarity:"SR",polarity:"Odd",img:"Images/animus/Oboro_sm.webp?raw=true"},
+      {name:"Plume",rarity:"SSR",polarity:"Disorder",img:"Images/animus/plume_sm.webp?raw=true"},
+      {name:"Rahu",rarity:"SSR",polarity:"Hollow",img:"Images/animus/rahu_sm.webp?raw=true"},
+      {name:"RC-77",rarity:"SR",polarity:"Odd",img:"Images/animus/RC-77_Sm.webp?raw=true"},
+      {name:"Rilmocha",rarity:"SSR",polarity:"Hollow",img:"Images/animus/rilmocha_sm.webp?raw=true"},
+      {name:"Rin",rarity:"SR",polarity:"Reason",img:"Images/animus/rin_sm.webp?raw=true"},
+      {name:"Rin The Unbowed",rarity:"SR",polarity:"Odd",img:"Images/animus/rin-unbowed_sm.webp?raw=true"},
+      {name:"Rosa",rarity:"SSR",polarity:"Odd",img:"Images/animus/rosa_sm.webp?raw=true"},
+      {name:"Sania",rarity:"SR",polarity:"Hollow",img:"Images/animus/Sania_sm.webp?raw=true"},
+      {name:"Sania Vengeful Thorn",rarity:"SSR",polarity:"Disorder",img:"Images/animus/Sania_withered_sm.webp?raw=true"},
+      {name:"Sybil",rarity:"R",polarity:"Odd",img:"Images/animus/sybil_sm.webp?raw=true"},
+      {name:"Tiamat",rarity:"SSR",polarity:"Odd",img:"Images/animus/Tiamat_sm.webp?raw=true"},
+      {name:"Tsukiyo Mi",rarity:"SSR",polarity:"Odd",img:"Images/animus/tsukiyomi_sm.webp?raw=true"},
+      {name:"Tsutomu",rarity:"SR",polarity:"Hollow",img:"Images/animus/Tsutomu_sm.webp?raw=true"},
+      {name:"Turandot",rarity:"SR",polarity:"Reason",img:"Images/animus/turandot_sm.webp?raw=true"},
+      {name:"Valerian",rarity:"SR",polarity:"Constant",img:"Images/animus/Valerian_sm.webp?raw=true"},
+      {name:"Veronica",rarity:"SSR",polarity:"Reason",img:"Images/animus/Veronica_sm.webp?raw=true"},
+      {name:"Vice",rarity:"R",polarity:"Constant",img:"Images/animus/vice_sm.webp?raw=true"},
+      {name:"Victor",rarity:"SR",polarity:"Disorder",img:"Images/animus/victor_sm.webp?raw=true"},
+      {name:"Viper",rarity:"SR",polarity:"Odd",img:"Images/animus/viper_sm.webp?raw=true"},
+      {name:"Xiada",rarity:"SSR",polarity:"Odd",img:"Images/animus/Xiada_sm.webp?raw=true"},
+      {name:"Yang",rarity:"SR",polarity:"Odd",img:"Images/animus/yang_sm.webp?raw=true"},
+      {name:"Yeli",rarity:"SSR",polarity:"Constant",img:"Images/animus/yeli_sm.webp?raw=true"}
+    ];
+
+    const shellData = [
+      {name:"Alicorn",img:"Images/shell/Leg_Alicorn.webp"},
+      {name:"Amber",img:"Images/shell/Leg_amber.webp"},
+      {name:"Artisan",img:"Images/shell/Leg_Artisan.webp"},
+      {name:"Black Moon",img:"Images/shell/Leg_Black_Moon.webp"},
+      {name:"Codex Of Magic",img:"Images/shell/Leg_Codex_of_Magic.webp"},
+      {name:"Count",img:"Images/shell/Leg_Count.webp"},
+      {name:"Fortissimo",img:"Images/shell/Leg_fortissimu.webp"},
+      {name:"Gigabyte",img:"Images/shell/Leg_Gigabyte.webp"},
+      {name:"Golden Lion",img:"Images/shell/Leg_Golden_Lion.webp"},
+      {name:"Halloween",img:"Images/shell/Leg_Halloween.webp"},
+      {name:"Jackal Guard",img:"Images/shell/Leg_Jackal_Guard.webp"},
+      {name:"Law Of Silence",img:"Images/shell/Leg_Law_of_Silence.webp"},
+      {name:"Lighthouse",img:"Images/shell/Leg_Lighthouse.webp"},
+      {name:"Ouroboros",img:"Images/shell/Leg_Ouroboros.webp"},
+      {name:"Reaper Steps",img:"Images/shell/Leg_Reaper_Steps.webp"},
+      {name:"Revelation",img:"Images/shell/Leg_Revelation.webp"},
+      {name:"Supernova",img:"Images/shell/Leg_Supernova.webp"},
+      {name:"Sword VII",img:"Images/shell/Leg_Sword_VII.webp"},
+      {name:"Tiger Yin",img:"Images/shell/Leg_Tiger_Yin.webp"},
+      {name:"White Fang",img:"Images/shell/Leg_White_Fang.webp"}
+    ];
+
+    const shellpassivesData = [
+      {slot:1,name:"Amplification",effect:"ATK"},
+      {slot:1,name:"Overclocking",effect:"ATK%"},
+      {slot:1,name:"Source",effect:"HP"},
+      {slot:1,name:"Surge",effect:"HP%"},
+      {slot:1,name:"Crystallization",effect:"DEF"},
+      {slot:1,name:"Crystal Wall",effect:"DEF%"},
+      {slot:2,name:"Penetration",effect:"CRIT Rate"},
+      {slot:2,name:"Unparalleled",effect:"CRIT DMG"},
+      {slot:2,name:"Shadow Dash",effect:"SPD"},
+      {slot:2,name:"Vibrancy",effect:"Healing Done"},
+      {slot:2,name:"Support",effect:"Shield Provided"},
+      {slot:2,name:"Focus",effect:"Effect ACC"},
+      {slot:2,name:"Calm",effect:"Effect RES"},
+      {slot:3,name:"Assault",effect:"DMG Dealt"},
+      {slot:3,name:"Dauntless",effect:"DMG Taken"},
+      {slot:3,name:"Shadow Guard",effect:"DMG Taken if the character has the highest SPD among all allies"},
+      {slot:3,name:"Defensive Stance",effect:"DMG Taken if the character didn't deal damage in a turn (up to 3 stacks)"},
+      {slot:3,name:"Synergy",effect:"DMG Dealt by an ally after applying shield/healing to them (up to 5 stacks)"},
+      {slot:3,name:"Insight",effect:"Effect RES & Effect ACC (effect decreases by 20% at the end of each turn)"},
+      {slot:3,name:"Gaze",effect:"Effect ACC (increase at the end of each turn; up to 5 stacks)"},
+      {slot:3,name:"Blade of Reason",effect:"DMG Dealt (only if Reason element)"},
+      {slot:3,name:"Blade of Oddity",effect:"DMG Dealt (only if Odd element)"},
+      {slot:3,name:"Blade of Hollow",effect:"DMG Dealt (only if Hollow element)"},
+      {slot:3,name:"Blade of Constancy",effect:"DMG Dealt (only if Constant element)"},
+      {slot:3,name:"Blade of Disorder",effect:"DMG Dealt (only if Disorder element)"}
+    ];
+
+    const matrixData = [
+      {name:"Battlewill",img:"Images/matrix/set_battlewill.webp"},
+      {name:"Bloodbath",img:"Images/matrix/set_bloodbath.webp"},
+      {name:"Bramble",img:"Images/matrix/set_bramble.webp"},
+      {name:"Bulwark",img:"Images/matrix/set_bulwark.webp"},
+      {name:"Colossguard",img:"Images/matrix/set_colossguard.webp"},
+      {name:"Cure",img:"Images/matrix/set_cure.webp"},
+      {name:"Etherplague",img:"Images/matrix/set_etherplague.webp"},
+      {name:"Evolguard",img:"Images/matrix/set_evolguard.webp"},
+      {name:"Fury",img:"Images/matrix/set_fury.webp"},
+      {name:"Furyedge",img:"Images/matrix/set_furyedge.webp"},
+      {name:"Harvest",img:"Images/matrix/set_harvest.webp"},
+      {name:"Keeneye",img:"Images/matrix/set_keeneye.webp"},
+      {name:"Momentum",img:"Images/matrix/set_momentum.webp"},
+      {name:"Onslaught",img:"Images/matrix/set_onslaught.webp"},
+      {name:"Strive",img:"Images/matrix/set_strive.webp"},
+      {name:"Swiftraid",img:"Images/matrix/set_swiftraid.webp"},
+      {name:"Swiftrush",img:"Images/matrix/set_swiftrush.webp"},
+      {name:"Swiftsmite",img:"Images/matrix/set_swiftsmite.webp"},
+      {name:"Timeweave",img:"Images/matrix/set_timeweave.webp"},
+      {name:"Unbreakable",img:"Images/matrix/set_unbreakable.webp"},
+      {name:"Wellspring",img:"Images/matrix/set_wellspring.webp"}
+    ];
+
+    let selectedAnimus = null;
+    let selectedShell = null;
+    // Initialiser chaque set à une valeur unique
+    let selectedSet1 = matrixData[0];
+    let selectedSet2 = matrixData[1] || matrixData[0];
+    let selectedSet3 = matrixData[2] || matrixData[0];
+    let prowessValues = {s1: '1', s2: '1', s3: '1'};
+
+    let shellPassives = {p1: '', p2: '', p3: ''};
+
+      // Modules options
+      const modulesOptions = [
+        "HP%", "HP", "ATK%", "ATK", "DEF%", "DEF", "CRIT Rate", "CRIT DMG", "EFF ACC", "EFF RES"
+      ];
+      let selectedModules = [modulesOptions[0], modulesOptions[1], modulesOptions[2]];
+
+      const moduleSelect1 = document.getElementById('moduleSelect1');
+      const moduleSelect2 = document.getElementById('moduleSelect2');
+      const moduleSelect3 = document.getElementById('moduleSelect3');
+
+      function fillModuleSelect(select) {
+        select.innerHTML = '';
+        modulesOptions.forEach(opt => {
+          const o = document.createElement('option');
+          o.value = opt;
+          o.textContent = opt;
+          select.appendChild(o);
+        });
+      }
+
+      function updateModuleSelectors() {
+        fillModuleSelect(moduleSelect1);
+        fillModuleSelect(moduleSelect2);
+        fillModuleSelect(moduleSelect3);
+        moduleSelect1.value = selectedModules[0];
+        moduleSelect2.value = selectedModules[1];
+        moduleSelect3.value = selectedModules[2];
+      }
+
+      moduleSelect1.addEventListener('change', (e) => {
+        selectedModules[0] = e.target.value;
+        updateModuleSelectors();
+        updatePreview();
+      });
+      moduleSelect2.addEventListener('change', (e) => {
+        selectedModules[1] = e.target.value;
+        updateModuleSelectors();
+        updatePreview();
+      });
+      moduleSelect3.addEventListener('change', (e) => {
+        selectedModules[2] = e.target.value;
+        updateModuleSelectors();
+        updatePreview();
+      });
+
+      updateModuleSelectors();
+
+    const animusSelect = document.querySelector('.animus-select');
+    const animusSelector = document.getElementById('animusSelector');
+    const animusGrid = document.getElementById('animusGrid');
+    const shellSelect = document.querySelector('.shell-select');
+    const shellSelector = document.getElementById('shellSelector');
+    const shellGrid = document.getElementById('shellGrid');
+    const overlay = document.getElementById('overlay');
+    const setSelector1 = document.getElementById('setSelector1');
+    const setSelector2 = document.getElementById('setSelector2');
+    const setSelector3 = document.getElementById('setSelector3');
+    const setGrid1 = document.getElementById('setGrid1');
+    const setGrid2 = document.getElementById('setGrid2');
+    const setGrid3 = document.getElementById('setGrid3');
+    const setsSelect1 = setSelector1.parentElement;
+    const setsSelect2 = setSelector2.parentElement;
+    const setsSelect3 = setSelector3.parentElement;
+
+    const prowessS1 = document.getElementById('prowessS1');
+    const prowessS2 = document.getElementById('prowessS2');
+    const prowessS3 = document.getElementById('prowessS3');
+
+    const shellPassive1 = document.getElementById('shellPassive1');
+    const shellPassive2 = document.getElementById('shellPassive2');
+    const shellPassive3 = document.getElementById('shellPassive3');
+
+    prowessS1.addEventListener('change', (e) => {
+      prowessValues.s1 = e.target.value;
+      updatePreview();
+    });
+
+    prowessS2.addEventListener('change', (e) => {
+      prowessValues.s2 = e.target.value;
+      updatePreview();
+    });
+
+    prowessS3.addEventListener('change', (e) => {
+      prowessValues.s3 = e.target.value;
+      updatePreview();
+    });
+
+      // Populate shell passives selectors
+      function fillShellPassiveSelect(select, slot) {
+          select.innerHTML = '';
+          shellpassivesData.filter(p => p.slot === slot).forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.name;
+            // Use Unicode separator and uppercase for name, effect below
+            opt.textContent = `${p.name} — ${p.effect}`;
+            opt.style.fontWeight = 'bold';
+            select.appendChild(opt);
+          });
+      }
+
+      fillShellPassiveSelect(shellPassive1, 1);
+      fillShellPassiveSelect(shellPassive2, 2);
+      fillShellPassiveSelect(shellPassive3, 3);
+
+      shellPassive1.addEventListener('change', (e) => {
+        shellPassives.p1 = e.target.value;
+        updatePreview();
+      });
+      shellPassive2.addEventListener('change', (e) => {
+        shellPassives.p2 = e.target.value;
+        updatePreview();
+      });
+      shellPassive3.addEventListener('change', (e) => {
+        shellPassives.p3 = e.target.value;
+        updatePreview();
+      });
+
+      // Set initial values
+      shellPassives.p1 = shellPassive1.options[0]?.value || '';
+      shellPassives.p2 = shellPassive2.options[0]?.value || '';
+      shellPassives.p3 = shellPassive3.options[0]?.value || '';
+
+    // Créer les grilles
+    animusData.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'animus-option';
+      div.setAttribute('data-rarity', a.rarity);
+      div.setAttribute('data-polarity', a.polarity);
+      div.innerHTML = `<img src="${a.img}" alt="${a.name}">`;
+      div.onclick = () => selectAnimus(a);
+      animusGrid.appendChild(div);
+    });
+
+    shellData.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'shell-option';
+      div.innerHTML = `<img src="${s.img}" alt="${s.name}">`;
+      div.onclick = () => selectShell(s);
+      shellGrid.appendChild(div);
+    });
+
+  // Initialisation correcte du set custom avec valeurs uniques
+  renderSetSelector(setSelector1, selectedSet1);
+  renderSetSelector(setSelector2, selectedSet2);
+  renderSetSelector(setSelector3, selectedSet3);
+  fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+  fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+  fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+
+    animusSelector.onclick = (e) => {
+      e.stopPropagation();
+      shellSelect.classList.remove('open');
+      animusSelect.classList.toggle('open');
+    };
+
+    shellSelector.onclick = (e) => {
+      e.stopPropagation();
+      animusSelect.classList.remove('open');
+      shellSelect.classList.toggle('open');
+    };
+
+    setSelector1.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect2.classList.remove('open');
+      setsSelect3.classList.remove('open');
+      setsSelect1.classList.toggle('open');
+    };
+
+    setSelector2.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect1.classList.remove('open');
+      setsSelect3.classList.remove('open');
+      setsSelect2.classList.toggle('open');
+    };
+
+    setSelector3.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect1.classList.remove('open');
+      setsSelect2.classList.remove('open');
+      setsSelect3.classList.toggle('open');
+    };
+
+    shellGrid.onclick = (e) => {
+      e.stopPropagation();
+    };
+
+    function renderSetSelector(selector, selected) {
+      if (selected) {
+        selector.innerHTML = `<img src='${selected.img}' alt='${selected.name}'><div>${selected.name}</div>`;
+      } else {
+        selector.innerHTML = '-- Choose a set --';
+      }
+    }
+
+    function fillSetGrid(grid, selectFn, excludeNames = []) {
+      grid.innerHTML = '';
+      matrixData.forEach(set => {
+        if (!excludeNames.includes(set.name)) {
+          const div = document.createElement('div');
+          div.className = 'set-option';
+          div.innerHTML = `<img src='${set.img}' alt='${set.name}'><span>${set.name}</span>`;
+          div.onclick = () => selectFn(set);
+          grid.appendChild(div);
+        }
+      });
+    }
+    function selectSet1(set) {
+      // Si le set sélectionné est déjà pris par un autre, ignorer
+      if (set.name === selectedSet2.name || set.name === selectedSet3.name) return;
+      selectedSet1 = set;
+      renderSetSelector(setSelector1, set);
+      setsSelect1.classList.remove('open');
+      fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+      fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+      updatePreview();
+    }
+    function selectSet2(set) {
+      if (set.name === selectedSet1.name || set.name === selectedSet3.name) return;
+      selectedSet2 = set;
+      renderSetSelector(setSelector2, set);
+      setsSelect2.classList.remove('open');
+      fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+      fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+      updatePreview();
+    }
+    function selectSet3(set) {
+      if (set.name === selectedSet1.name || set.name === selectedSet2.name) return;
+      selectedSet3 = set;
+      renderSetSelector(setSelector3, set);
+      setsSelect3.classList.remove('open');
+      fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+      fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+      updatePreview();
+    }
+    // Initialisation sans doublons
+    fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+    fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+    fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+
+    animusSelector.onclick = (e) => {
+      e.stopPropagation();
+      shellSelect.classList.remove('open');
+      animusSelect.classList.toggle('open');
+    };
+
+    shellSelector.onclick = (e) => {
+      e.stopPropagation();
+      animusSelect.classList.remove('open');
+      shellSelect.classList.toggle('open');
+    };
+
+    setSelector1.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect1.classList.toggle('open');
+    };
+
+    setSelector2.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect2.classList.toggle('open');
+    };
+
+    setSelector3.onclick = (e) => {
+      e.stopPropagation();
+      setsSelect3.classList.toggle('open');
+    };
+
+    shellGrid.onclick = (e) => {
+      e.stopPropagation();
+    };
+
+    function renderSetSelector(selector, selected) {
+      if (selected) {
+        selector.innerHTML = `<img src='${selected.img}' alt='${selected.name}'><div>${selected.name}</div>`;
+      } else {
+        selector.innerHTML = '-- Choisir un set --';
+      }
+    }
+
+    function fillSetGrid(grid, selectFn, excludeNames = []) {
+      grid.innerHTML = '';
+      matrixData.forEach(set => {
+        if (!excludeNames.includes(set.name)) {
+          const div = document.createElement('div');
+          div.className = 'set-option';
+          div.innerHTML = `<img src='${set.img}' alt='${set.name}'><span>${set.name}</span>`;
+          div.onclick = () => selectFn(set);
+          grid.appendChild(div);
+        }
+      });
+    }
+    function selectSet1(set) {
+      selectedSet1 = set;
+      renderSetSelector(setSelector1, set);
+      setsSelect1.classList.remove('open');
+      fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+      fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+      updatePreview();
+    }
+    function selectSet2(set) {
+      selectedSet2 = set;
+      renderSetSelector(setSelector2, set);
+      setsSelect2.classList.remove('open');
+      fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+      fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+      updatePreview();
+    }
+    function selectSet3(set) {
+      selectedSet3 = set;
+      renderSetSelector(setSelector3, set);
+      setsSelect3.classList.remove('open');
+      fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+      fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+      updatePreview();
+    }
+    // Initialisation sans doublons
+    fillSetGrid(setGrid1, selectSet1, [selectedSet2.name, selectedSet3.name]);
+    fillSetGrid(setGrid2, selectSet2, [selectedSet1.name, selectedSet3.name]);
+    fillSetGrid(setGrid3, selectSet3, [selectedSet1.name, selectedSet2.name]);
+
+    document.addEventListener('click', () => {
+      animusSelect.classList.remove('open');
+      shellSelect.classList.remove('open');
+      setsSelect1.classList.remove('open');
+      setsSelect2.classList.remove('open');
+      setsSelect3.classList.remove('open');
+    });
+
+    animusGrid.onclick = (e) => {
+      e.stopPropagation();
+    };
+
+    function selectAnimus(a) {
+      selectedAnimus = a;
+  animusSelector.innerHTML = `<img src="${a.img}" alt="${a.name}"><div>${a.name}</div>`;
+      animusSelector.setAttribute('data-polarity', a.polarity);
+      animusSelector.setAttribute('data-rarity', a.rarity);
+      animusSelect.classList.remove('open');
+      updatePreview();
+    }
+
+    function selectShell(s) {
+      selectedShell = s;
+  shellSelector.innerHTML = `<img src="${s.img}" alt="${s.name}"><span>${s.name}</span>`;
+      shellSelect.classList.remove('open');
+      updatePreview();
+    }
+
+    function updatePreview() {
+  const prowessDisplay = `${prowessValues.s1} | ${prowessValues.s2} | ${prowessValues.s3}`;
+      function passiveInfo(val, slot) {
+        if (!val) return '-';
+        const p = shellpassivesData.find(x => x.slot === slot && x.name === val);
+        return p ? `<strong>${p.name}</strong><br><span>${p.effect}</span>` : val;
+      }
+      const shellPassivesDisplay = `
+        <div style='display:flex;gap:4px;font-size:0.95em;'>
+          <div style='flex:1;padding:0 2px;'>${passiveInfo(shellPassives.p1, 1)}</div>
+          <div style='flex:1;padding:0 2px;'>${passiveInfo(shellPassives.p2, 2)}</div>
+          <div style='flex:1;padding:0 2px;'>${passiveInfo(shellPassives.p3, 3)}</div>
+        </div>
+      `;
+      const setDisplay = `
+        <span><img src='${selectedSet1.img}' alt='${selectedSet1.name}' style='width:32px;height:32px;border-radius:6px;margin-right:4px;vertical-align:middle;'>${selectedSet1.name}</span>
+        <span><img src='${selectedSet2.img}' alt='${selectedSet2.name}' style='width:32px;height:32px;border-radius:6px;margin-right:4px;vertical-align:middle;'>${selectedSet2.name}</span>
+        <span><img src='${selectedSet3.img}' alt='${selectedSet3.name}' style='width:32px;height:32px;border-radius:6px;margin-right:4px;vertical-align:middle;'>${selectedSet3.name}</span>
+      `;
+      // Compact build recap with animus and shell images
+
+      const animusDisplay = `
+        <span><img src='${selectedAnimus?.img || ""}' alt='${selectedAnimus?.name || ""}' style='width:32px;height:32px;border-radius:6px;margin-right:4px;vertical-align:middle;'>${selectedAnimus?.name || ""}</span>
+      `;
+      const shellDisplay = `
+        <span><img src='${selectedShell?.img || ""}' alt='${selectedShell?.name || ""}' style='width:32px;height:32px;border-radius:6px;margin-right:4px;vertical-align:middle;'>${selectedShell?.name || ""}</span>
+      `;
+      document.getElementById('preview').innerHTML = `
+        <div style='display:flex;align-items:center;gap:30px;font-size:1.00em; margin-bottom:12px;'>
+          <div style='display:flex;align-items:center;gap:12px;'>${animusDisplay}</div>
+          <div><strong>Prowess:</strong> ${prowessDisplay}</div>
+        </div>
+        <div style='display:flex;align-items:center;gap:12px; margin-bottom:12px;'>${shellDisplay}</div>
+        <div style='margin-bottom:12px;'><strong>Shell Passives:</strong> ${shellPassivesDisplay}</div>
+        <div style='margin-bottom:12px;'>${setDisplay}</div>
+        <div style='margin-bottom:0;'><strong>Modules:</strong> ${selectedModules.map(m => `<span style='margin-right:8px;'>${m}</span>`).join('')}</div>
+      `;
+    }
+
+    let lastBuildLink = '';
+    function generateAndCopyLink() {
+      const build = {animus: selectedAnimus, shell: selectedShell, prowess: prowessValues, shellPassives, sets: [selectedSet1, selectedSet2, selectedSet3], modules: selectedModules};
+      const encoded = btoa(JSON.stringify(build));
+      const url = window.location.origin + window.location.pathname + '?build=' + encoded;
+      lastBuildLink = url;
+      window.history.replaceState(null, '', url);
+      updatePreview();
+      // Copy to clipboard
+      if (lastBuildLink) {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(lastBuildLink).then(showToast);
+        } else {
+          const tempInput = document.createElement('input');
+          tempInput.value = lastBuildLink;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          showToast();
+        }
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const buildCode = params.get('build');
+      if (buildCode) {
+        try {
+          const build = JSON.parse(atob(buildCode));
+          if (build.animus) selectAnimus(build.animus);
+          if (build.shell) selectShell(build.shell);
+          if (build.prowess) {
+            prowessValues = build.prowess;
+            prowessS1.value = build.prowess.s1 || '1';
+            prowessS2.value = build.prowess.s2 || '1';
+            prowessS3.value = build.prowess.s3 || '1';
+            updatePreview();
+          }
+          if (build.shellPassives) {
+            shellPassives = build.shellPassives;
+            shellPassive1.value = build.shellPassives.p1 || shellPassive1.options[0]?.value || '';
+            shellPassive2.value = build.shellPassives.p2 || shellPassive2.options[0]?.value || '';
+            shellPassive3.value = build.shellPassives.p3 || shellPassive3.options[0]?.value || '';
+            updatePreview();
+          }
+          if (build.sets && Array.isArray(build.sets)) {
+            selectedSet1 = matrixData.find(m => m.name === build.sets[0]?.name) || matrixData[0];
+            selectedSet2 = matrixData.find(m => m.name === build.sets[1]?.name) || matrixData[0];
+            selectedSet3 = matrixData.find(m => m.name === build.sets[2]?.name) || matrixData[0];
+            renderSetSelector(setSelector1, selectedSet1);
+            renderSetSelector(setSelector2, selectedSet2);
+            renderSetSelector(setSelector3, selectedSet3);
+            updatePreview();
+          }
+            if (build.modules && Array.isArray(build.modules)) {
+              selectedModules = build.modules.slice(0, 3);
+              updateModuleSelectors();
+              updatePreview();
+            }
+        } catch (e) {
+          console.error('Erreur de décodage:', e);
+        }
+      }
+    }
+
+    loadFromURL();
+  </script>
+</body>
+</html>
